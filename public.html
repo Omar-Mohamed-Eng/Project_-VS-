@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>7 SENSE</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        color: #000000;
+        background-color: #4f03ff;
+      }
+      .first-button {
+        background: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .sec-button {
+        background: #6c757d;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .third-button {
+        background: transparent;
+        color: #007bff;
+        padding: 8px 16px;
+        border: 1px solid #007bff;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .navbar {
+        background: #343a40;
+        color: white;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+      }
+      .nav-links {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+      }
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+      }
+      .nav-links a:hover {
+        background: #0800ff;
+      }
+      .notification-dropdown {
+        position: relative;
+      }
+      .notification-button {
+        background: transparent;
+        color: white;
+        border: 1px solid #6c757d;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .badge {
+        background: #dc3545;
+        color: white;
+        border-radius: 50%;
+        padding: 2px 6px;
+        font-size: 0.8rem;
+        margin-left: 5px;
+      }
+      .notification-dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background: white;
+        color: #333;
+        min-width: 300px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+        z-index: 1001;
+      }
+      .notification-item {
+        padding: 1rem;
+      }
+      .notification-dropdown:hover .notification-dropdown-content {
+        display: block;
+      }
+      .user-menu {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .main-content {
+        margin-top: 80px;
+        padding: 2rem;
+        min-height: calc(100vh - 80px);
+      }
+      .page {
+        display: none;
+      }
+      body.login-page .navbar {
+        display: none;
+      }
+      body.login-page .main-content {
+        margin-top: 0;
+        padding: 0;
+      }
+      .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #020005 100%);
+      }
+      .login-form {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+      }
+      .login-form h1 {
+        text-align: center;
+        margin-bottom: 0.5rem;
+        color: #333;
+      }
+      .login-form h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #666;
+        font-weight: normal;
+      }
+      .form-group {
+        margin-bottom: 1rem;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+      .error-message {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        display: block;
+      }
+      .form-footer {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+      }
+      .form-footer span {
+        font-size: 0.9rem;
+      }
+      .form-footer button {
+        flex-shrink: 0;
+      }
+      .general-error {
+        margin-top: 0.5rem;
+        color: #dc3545;
+        font-size: 0.9rem;
+      }
+      .stats-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+      .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        text-align: center;
+      }
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #6548ae;
+      }
+      .activity-list {
+        margin-top: 1rem;
+      }
+      .activity-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem 0;
+        border-bottom: 1px solid #eee;
+      }
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+      .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+      .project-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .project-meta {
+        display: flex;
+        justify-content: space-between;
+        margin: 1rem 0;
+      }
+      .project-status.active {
+        color: #28a745;
+        font-weight: bold;
+      }
+      .project-status.completed {
+        color: #6c757d;
+        font-weight: bold;
+      }
+      .project-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .kanban-board {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+      .kanban-column {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 10px;
+        min-height: 500px;
+      }
+      .kanban-column h3 {
+        text-align: center;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #000000;
+      }
+      .task-card {
+        background: rgb(171, 255, 3);
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 4px;
+      }
+      .priority-high {
+        background: #dc3545;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+      }
+      .priority-medium {
+        background: #ffffff;
+        color: black;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+      }
+      .priority-low {
+        background: #28a745;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+      }
+      .task-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+      }
+      .task-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+      .info-section,
+      .description-section,
+      .attachments-section {
+        background-color: #ffffff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+      }
+      .info-grid {
+        display: grid;
+        gap: 1rem;
+      }
+      .info-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #000000;
+      }
+      .attachment-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #eee;
+      }
+      .download-button {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 4px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .task-comments {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+      }
+      .comments-list {
+        margin: 1rem 0;
+        max-height: 400px;
+      }
+      .comment-item {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #000000;
+      }
+      .comment-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+      }
+      .comment-author {
+        font-weight: bold;
+      }
+      .comment-time {
+        font-size: 0.875rem;
+      }
+      .comment-form textarea {
+        width: 100%;
+        resize: block;
+        padding: 1rem;
+        border: 2px solid #000000;
+        border-radius: 10px;
+      }
+      .stats-table {
+        background: rgb(255, 255, 255);
+        padding: 1rem;
+        border-radius: 10px;
+        margin-top: 1.5rem;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #000000;
+      }
+      th {
+        background: #000000;
+        color: rgb(223, 192, 144);
+        font-weight: bold;
+      }
+      td {
+        background: #00ff62;
+        color: #000000;
+      }
+    </style>
+  </head>
+  <body class="login-page">
+    <nav class="navbar">
+      <div class="nav-logo">
+        <h2>7 SENSE</h2>
+      </div>
+      <div class="nav-links">
+        <a href="#" onclick="showPage('dashboard')">Dashboard</a>
+        <a href="#" onclick="showPage('projects')">Projects</a>
+        <a href="#" onclick="showPage('reports')">Reports</a>
+        <div class="notification-dropdown">
+          <button class="notification-button">
+            Notifications <span class="badge">3</span>
+          </button>
+          <div class="notification-dropdown-content">
+            <div class="notification-item">
+              task "Design Homepage" is overdue
+            </div>
+            <div class="notification-item">you were assigned to "Fix Bugs"</div>
+            <div class="notification-item">
+              new comment on "API Development"
+            </div>
+          </div>
+        </div>
+        <div class="user-menu">
+          <span id="usernameLabel">mohamed ayman</span>
+          <a href="#" onclick="logout()">Logout</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <!-- LOGIN PAGE -->
+      <div id="login" class="page">
+        <div class="login-container">
+          <div class="login-form">
+            <h1>7 SENSE</h1>
+            <h2>Login To Your Account</h2>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+              <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required />
+                <span class="error-message" id="emailError"></span>
+              </div>
+              <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required />
+                <span class="error-message" id="passwordError"></span>
+              </div>
+              <button type="submit" class="first-button">Login</button>
+
+              <div class="form-footer">
+                <span>Don't have an account?</span>
+                <button
+                  type="button"
+                  class="third-button"
+                  onclick="showPage('signup')"
+                >
+                  Sign Up
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIGNUP PAGE -->
+      <div id="signup" class="page">
+        <div class="login-container">
+          <div class="login-form">
+            <h1>7 SENSE</h1>
+            <h2>Create a New Account</h2>
+            <form id="signupForm" onsubmit="handleSignup(event)">
+              <div class="form-group">
+                <label for="signupName">Full Name:</label>
+                <input type="text" id="signupName" name="name" required />
+                <span class="error-message" id="signupNameError"></span>
+              </div>
+              <div class="form-group">
+                <label for="signupEmail">Email:</label>
+                <input type="email" id="signupEmail" name="email" required />
+                <span class="error-message" id="signupEmailError"></span>
+              </div>
+              <div class="form-group">
+                <label for="signupPassword">Password:</label>
+                <input
+                  type="password"
+                  id="signupPassword"
+                  name="password"
+                  required
+                />
+                <span class="error-message" id="signupPasswordError"></span>
+              </div>
+              <div class="form-group">
+                <label for="signupConfirmPassword">Confirm Password:</label>
+                <input
+                  type="password"
+                  id="signupConfirmPassword"
+                  name="confirmPassword"
+                  required
+                />
+                <span
+                  class="error-message"
+                  id="signupConfirmPasswordError"
+                ></span>
+              </div>
+
+              <button type="submit" class="first-button">Sign Up</button>
+
+              <div class="form-footer">
+                <span>Already have an account?</span>
+                <button
+                  type="button"
+                  class="third-button"
+                  onclick="showPage('login')"
+                >
+                  Back to Login
+                </button>
+              </div>
+
+              <div id="signupGeneralError" class="general-error"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- DASHBOARD PAGE -->
+      <div id="dashboard" class="page">
+        <div class="dashboard-page">
+          <h1>Dashboard</h1>
+
+          <div class="stats-cards">
+            <div class="stat-card">
+              <h3>Total Tasks</h3>
+              <p class="stat-number" id="stat-total">0</p>
+            </div>
+            <div class="stat-card">
+              <h3>Tasks Done</h3>
+              <p class="stat-number" id="stat-done">0</p>
+            </div>
+            <div class="stat-card">
+              <h3>In Progress</h3>
+              <p class="stat-number" id="stat-in-progress">0</p>
+            </div>
+            <div class="stat-card">
+              <h3>Overdue Tasks</h3>
+              <p class="stat-number" id="stat-overdue">0</p>
+            </div>
+          </div>
+
+          <div class="recent-activities">
+            <h2>Recent Activities</h2>
+            <div class="activity-list">
+              <div class="activity-item">
+                <span class="activity-text"
+                  >Task "Design Homepage" was completed</span
+                >
+                <span class="activity-time">2 hours ago</span>
+              </div>
+              <div class="activity-item">
+                <span class="activity-text"
+                  >New task "Fix Bugs" assigned to you</span
+                >
+                <span class="activity-time">5 hours ago</span>
+              </div>
+              <div class="activity-item">
+                <span class="activity-text"
+                  >Project "Website Redesign" was created</span
+                >
+                <span class="activity-time">1 day ago</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Projects from API in Dashboard -->
+          <h2 style="margin-top: 2rem">My Projects (from API)</h2>
+          <div class="stats-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Project Name</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="dashboard-projects-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECTS PAGE -->
+      <div id="projects" class="page">
+        <div class="projects-page">
+          <div class="page-header">
+            <h1>Projects</h1>
+            <button class="first-button" onclick="createProject()">
+              + New Project
+            </button>
+          </div>
+
+          <div class="projects-grid" id="projectsGrid">
+            <!-- يمكن لاحقاً نعملها Dynamic، الآن نخلي الـ static الموجود -->
+            <div class="project-card">
+              <h3>Website Redesign</h3>
+              <p class="project-description">
+                Complete overhaul of company website
+              </p>
+              <div class="project-meta">
+                <span class="task-count">12 tasks</span>
+                <span class="project-status active">Active</span>
+              </div>
+              <div class="project-actions">
+                <button
+                  class="sec-button"
+                  onclick="showPage('Website Redesign')"
+                >
+                  View
+                </button>
+                <button class="third-button">Edit</button>
+              </div>
+            </div>
+
+            <div class="project-card">
+              <h3>Mobile App Development</h3>
+              <p class="project-description">New iOS and Android application</p>
+              <div class="project-meta">
+                <span class="task-count">8 tasks</span>
+                <span class="project-status active">Active</span>
+              </div>
+              <div class="project-actions">
+                <button
+                  class="sec-button"
+                  onclick="showPage('Mobile App Development')"
+                >
+                  View
+                </button>
+                <button class="third-button">Edit</button>
+              </div>
+            </div>
+
+            <div class="project-card">
+              <h3>API Integration</h3>
+              <p class="project-description">Third-party API integration</p>
+              <div class="project-meta">
+                <span class="task-count">4 tasks</span>
+                <span class="project-status completed">Completed</span>
+              </div>
+              <div class="project-actions">
+                <button
+                  class="sec-button"
+                  onclick="showPage('API Integration')"
+                >
+                  View
+                </button>
+                <button class="third-button">Edit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WEBSITE REDESIGN PROJECT -->
+      <div id="Website Redesign" class="page">
+        <div class="Website Redesign-page">
+          <div class="project-header">
+            <h1>Website Redesign</h1>
+            <p class="project-description">
+              Complete overhaul of company website with modern design
+            </p>
+            <button class="first-button">+ Add Task</button>
+          </div>
+
+          <div class="kanban-board">
+            <div class="kanban-column">
+              <h3>To-Do</h3>
+              <div class="task-card" onclick="showPage('Design Homepage')">
+                <h4>Design Homepage</h4>
+                <p class="task-assignee">Assigned to:</p>
+                <span class="priority-high">High Priority</span>
+                <span class="due-date">Due: 2025-12-20</span>
+              </div>
+              <div class="task-card" onclick="showPage('Create Style Guide')">
+                <h4>Create Style Guide</h4>
+                <p class="task-assignee">Assigned to:</p>
+                <span class="priority-medium">Medium Priority</span>
+                <span class="due-date">Due: 2025-12-18</span>
+              </div>
+            </div>
+
+            <div class="kanban-column">
+              <h3>In Progress</h3>
+              <div
+                class="task-card"
+                onclick="showPage('Develop Header Component')"
+              >
+                <h4>Develop Header Component</h4>
+                <p class="task-assignee">Assigned to:</p>
+                <span class="priority-high">High Priority</span>
+                <span class="due-date">Due: 2025-12-15</span>
+              </div>
+            </div>
+
+            <div class="kanban-column">
+              <h3>Done</h3>
+              <div class="task-card" onclick="showPage('Project Setup')">
+                <h4>Project Setup</h4>
+                <p class="task-assignee">Assigned to:</p>
+                <span class="priority-low">Low Priority</span>
+                <span class="due-date">Due: 2025-12-10</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MOBILE APP DEVELOPMENT PROJECT -->
+      <div id="Mobile App Development" class="page">
+        <div class="Mobile App Development-page">
+          <div class="project-header">
+            <h1>Mobile App Development</h1>
+            <p class="project-description">
+              creating software applications for mobile devices
+            </p>
+            <button class="first-button">+ Add Task</button>
+          </div>
+
+          <div class="kanban-board">
+            <div class="kanban-column">
+              <h3>To-Do</h3>
+              <div class="task-card" onclick="showPage('Design Homepage')">
+                <h4>Design Homepage</h4>
+                <p class="task-assignee">Assigned to:</p>
+                <span class="priority-high">High Priority</span>
+                <span class="due-date">Due: 2025-12-1</span>
+              </div>
+              <div class="task-card" onclick="showPage('Create Style Guide')">
+                <h4>Create Style Guide</h4>
+                <p class="task-assignee">Assigned to:</p>
+                <span class="priority-medium">Medium Priority</span>
+                <span class="due-date">Due: 2025-12-2</span>
+              </div>
+            </div>
+
+            <div class="kanban-column">
+              <h3>In Progress</h3>
+              <div class="task-card" onclick="showPage('Develop software')">
+                <h4>Develop software</h4>
+                <p class="task-assignee">Assigned to:</p>
+                <span class="priority-high">High Priority</span>
+                <span class="due-date">Due: 2025-12-11</span>
+              </div>
+            </div>
+
+            <div class="kanban-column">
+              <h3>Done</h3>
+              <div class="task-card" onclick="showPage('Project Setup')">
+                <h4>Project Setup</h4>
+                <p class="task-assignee">Assigned to:</p>
+                <span class="priority-low">Low Priority</span>
+                <span class="due-date">Due: 2025-12-6</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- API INTEGRATION PROJECT -->
+      <div id="API Integration" class="page">
+        <div class="API Integration-page">
+          <div class="project-header">
+            <h1>API Integration</h1>
+            <p class="project-description">
+              Design and develop a secure middleware/service
+            </p>
+            <button class="first-button">+ Add Task</button>
+          </div>
+
+          <div class="kanban-board">
+            <div class="kanban-column">
+              <h3>To-Do</h3>
+              <div class="task-card" onclick="showPage('Design Homepage')">
+                <h4>Design Homepage</h4>
+                <p class="task-assignee">Assigned to:</p>
+                <span class="priority-high">High Priority</span>
+                <span class="due-date">Due: 2025-12-8</span>
+              </div>
+              <div class="task-card" onclick="showPage('Create Style Guide')">
+                <h4>Create Style Guide</h4>
+                <p class="task-assignee">Assigned to:</p>
+                <span class="priority-medium">Medium Priority</span>
+                <span class="due-date">Due: 2025-12-7</span>
+              </div>
+            </div>
+
+            <div class="kanban-column">
+              <h3>In Progress</h3>
+              <div
+                class="task-card"
+                onclick="showPage('develop a secure middleware')"
+              >
+                <h4>develop a secure middleware</h4>
+                <p class="task-assignee">Assigned to:</p>
+                <span class="priority-high">High Priority</span>
+                <span class="due-date">Due: 2025-12-4</span>
+              </div>
+            </div>
+
+            <div class="kanban-column">
+              <h3>Done</h3>
+              <div class="task-card" onclick="showPage('Project Setup')">
+                <h4>Project Setup</h4>
+                <p class="task-assignee">Assigned to:</p>
+                <span class="priority-low">Low Priority</span>
+                <span class="due-date">Due: 2025-12-9</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TASK DETAIL PAGES (نفس القديمة) -->
+
+      <div id="Design Homepage" class="page">
+        <div class="Design Homepage-page">
+          <div class="task-header">
+            <h1>Design Homepage</h1>
+            <div class="task-actions">
+              <button class="sec-button">Edit Task</button>
+              <button class="third-button">Delete</button>
+            </div>
+          </div>
+
+          <div class="task-layout">
+            <div class="task-info">
+              <div class="info-section">
+                <h3>Task Information</h3>
+                <div class="info-grid">
+                  <div class="info-item">
+                    <label>Status:</label>
+                    <span class="status-todo">To-Do</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Priority:</label>
+                    <span class="priority-high">High</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Assigned To:</label>
+                  </div>
+                  <div class="info-item">
+                    <label>Due Date:</label>
+                    <span>December 17, 2025</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Created:</label>
+                    <span>December 1, 2025</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="description-section">
+                <h3>Description</h3>
+                <p>
+                  Design a modern and responsive homepage for the company
+                  website.
+                </p>
+              </div>
+
+              <div class="attachments-section">
+                <h3>Attachments</h3>
+                <div class="attachments-list">
+                  <div class="attachment-item">
+                    <span class="file-name">design-specs.pdf</span>
+                    <button class="download-button">Download</button>
+                  </div>
+                  <div class="attachment-item">
+                    <span class="file-name">wireframes.zip</span>
+                    <button class="download-button">Download</button>
+                  </div>
+                </div>
+                <button class="third-button">+ Add Attachment</button>
+              </div>
+            </div>
+
+            <div class="task-comments">
+              <h3>Comments</h3>
+              <div class="comments-list">
+                <div class="comment-item">
+                  <div class="comment-header">
+                    <span class="comment-author">mohamed ayman</span>
+                    <span class="comment-time">2 hours ago</span>
+                  </div>
+                  <p class="comment-text">I've started working</p>
+                </div>
+                <div class="comment-item">
+                  <div class="comment-header">
+                    <span class="comment-author">ahmed mohamed</span>
+                    <span class="comment-time">1 hour ago</span>
+                  </div>
+                  <p class="comment-text">Great</p>
+                </div>
+              </div>
+              <div class="comment-form">
+                <textarea placeholder="Add a comment..." rows="3"></textarea>
+                <button class="first-button">Post Comment</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="Create Style Guide" class="page">
+        <div class="Create Style Guide-page">
+          <div class="task-header">
+            <h1>Create Style Guide</h1>
+            <div class="task-actions">
+              <button class="sec-button">Edit Task</button>
+              <button class="third-button">Delete</button>
+            </div>
+          </div>
+
+          <div class="task-layout">
+            <div class="task-info">
+              <div class="info-section">
+                <h3>Task Information</h3>
+                <div class="info-grid">
+                  <div class="info-item">
+                    <label>Status:</label>
+                    <span class="status-todo">To-Do</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Priority:</label>
+                    <span class="priority-high">High</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Assigned To:</label>
+                  </div>
+                  <div class="info-item">
+                    <label>Due Date:</label>
+                    <span>December 13, 2025</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Created:</label>
+                    <span>December 4, 2025</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="description-section">
+                <h3>Description</h3>
+                <p>Create a modern and responsive style guide.</p>
+              </div>
+
+              <div class="attachments-section">
+                <h3>Attachments</h3>
+                <div class="attachments-list">
+                  <div class="attachment-item">
+                    <span class="file-name">style-guide.pdf</span>
+                    <button class="download-button">Download</button>
+                  </div>
+                  <div class="attachment-item">
+                    <span class="file-name">styles.zip</span>
+                    <button class="download-button">Download</button>
+                  </div>
+                </div>
+                <button class="third-button">+ Add Attachment</button>
+              </div>
+            </div>
+
+            <div class="task-comments">
+              <h3>Comments</h3>
+              <div class="comments-list">
+                <div class="comment-item">
+                  <div class="comment-header">
+                    <span class="comment-author">abdala ahmed</span>
+                    <span class="comment-time">4 hours ago</span>
+                  </div>
+                  <p class="comment-text">I've started working</p>
+                </div>
+                <div class="comment-item">
+                  <div class="comment-header">
+                    <span class="comment-author">fatma ahmed</span>
+                    <span class="comment-time">2 hour ago</span>
+                  </div>
+                  <p class="comment-text">Great</p>
+                </div>
+              </div>
+              <div class="comment-form">
+                <textarea placeholder="Add a comment..." rows="3"></textarea>
+                <button class="first-button">Post Comment</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="Develop software" class="page">
+        <div class="Develop software-page">
+          <div class="task-header">
+            <h1>Develop software</h1>
+            <div class="task-actions">
+              <button class="sec-button">Edit Task</button>
+              <button class="third-button">Delete</button>
+            </div>
+          </div>
+
+          <div class="task-layout">
+            <div class="task-info">
+              <div class="info-section">
+                <h3>Task Information</h3>
+                <div class="info-grid">
+                  <div class="info-item">
+                    <label>Status:</label>
+                    <span class="status-todo">To-Do</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Priority:</label>
+                    <span class="priority-high">High</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Assigned To:</label>
+                  </div>
+                  <div class="info-item">
+                    <label>Due Date:</label>
+                    <span>December 30, 2025</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Created:</label>
+                    <span>December 19, 2025</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="description-section">
+                <h3>Description</h3>
+                <p>Develop a simple software.</p>
+              </div>
+
+              <div class="attachments-section">
+                <h3>Attachments</h3>
+                <div class="attachments-list">
+                  <div class="attachment-item">
+                    <span class="file-name">design.pdf</span>
+                    <button class="download-button">Download</button>
+                  </div>
+                  <div class="attachment-item">
+                    <span class="file-name">software.zip</span>
+                    <button class="download-button">Download</button>
+                  </div>
+                </div>
+                <button class="third-button">+ Add Attachment</button>
+              </div>
+            </div>
+
+            <div class="task-comments">
+              <h3>Comments</h3>
+              <div class="comments-list">
+                <div class="comment-item">
+                  <div class="comment-header">
+                    <span class="comment-author">mohamed ali</span>
+                    <span class="comment-time">30 minutes ago</span>
+                  </div>
+                  <p class="comment-text">I've started working</p>
+                </div>
+                <div class="comment-item">
+                  <div class="comment-header">
+                    <span class="comment-author">ahmed mohamed</span>
+                    <span class="comment-time">10 minutes ago</span>
+                  </div>
+                  <p class="comment-text">Great</p>
+                </div>
+              </div>
+              <div class="comment-form">
+                <textarea placeholder="Add a comment..." rows="3"></textarea>
+                <button class="first-button">Post Comment</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="develop a secure middleware" class="page">
+        <div class="develop a secure middleware-page">
+          <div class="task-header">
+            <h1>develop a secure middleware</h1>
+            <div class="task-actions">
+              <button class="sec-button">Edit Task</button>
+              <button class="third-button">Delete</button>
+            </div>
+          </div>
+
+          <div class="task-layout">
+            <div class="task-info">
+              <div class="info-section">
+                <h3>Task Information</h3>
+                <div class="info-grid">
+                  <div class="info-item">
+                    <label>Status:</label>
+                    <span class="status-todo">To-Do</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Priority:</label>
+                    <span class="priority-high">High</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Assigned To:</label>
+                  </div>
+                  <div class="info-item">
+                    <label>Due Date:</label>
+                    <span>December 15, 2025</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Created:</label>
+                    <span>December 24, 2025</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="description-section">
+                <h3>Description</h3>
+                <p>Develop a simple secure middleware.</p>
+              </div>
+
+              <div class="attachments-section">
+                <h3>Attachments</h3>
+                <div class="attachments-list">
+                  <div class="attachment-item">
+                    <span class="file-name">tools.pdf</span>
+                    <button class="download-button">Download</button>
+                  </div>
+                  <div class="attachment-item">
+                    <span class="file-name">software.zip</span>
+                    <button class="download-button">Download</button>
+                  </div>
+                </div>
+                <button class="third-button">+ Add Attachment</button>
+              </div>
+            </div>
+
+            <div class="task-comments">
+              <h3>Comments</h3>
+              <div class="comments-list">
+                <div class="comment-item">
+                  <div class="comment-header">
+                    <span class="comment-author">omar mohamed</span>
+                    <span class="comment-time">1 hours ago</span>
+                  </div>
+                  <p class="comment-text">I've started working</p>
+                </div>
+                <div class="comment-item">
+                  <div class="comment-header">
+                    <span class="comment-author">mostafa mohamed</span>
+                    <span class="comment-time">35 minutes ago</span>
+                  </div>
+                  <p class="comment-text">Great</p>
+                </div>
+              </div>
+              <div class="comment-form">
+                <textarea placeholder="Add a comment..." rows="3"></textarea>
+                <button class="first-button">Post Comment</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="Develop Header Component" class="page">
+        <div class="Develop Header Component-page">
+          <div class="task-header">
+            <h1>Develop Header Component</h1>
+            <div class="task-actions">
+              <button class="sec-button">Edit Task</button>
+              <button class="third-button">Delete</button>
+            </div>
+          </div>
+
+          <div class="task-layout">
+            <div class="task-info">
+              <div class="info-section">
+                <h3>Task Information</h3>
+                <div class="info-grid">
+                  <div class="info-item">
+                    <label>Status:</label>
+                    <span class="status-todo">To-Do</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Priority:</label>
+                    <span class="priority-high">High</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Assigned To:</label>
+                  </div>
+                  <div class="info-item">
+                    <label>Due Date:</label>
+                    <span>December 20, 2025</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Created:</label>
+                    <span>December 1, 2025</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="description-section">
+                <h3>Description</h3>
+                <p>
+                  Design a modern and responsive homepage for the company
+                  website.
+                </p>
+              </div>
+
+              <div class="attachments-section">
+                <h3>Attachments</h3>
+                <div class="attachments-list">
+                  <div class="attachment-item">
+                    <span class="file-name">header components.pdf</span>
+                    <button class="download-button">Download</button>
+                  </div>
+                  <div class="attachment-item">
+                    <span class="file-name">wireframes.zip</span>
+                    <button class="download-button">Download</button>
+                  </div>
+                </div>
+                <button class="third-button">+ Add Attachment</button>
+              </div>
+            </div>
+
+            <div class="task-comments">
+              <h3>Comments</h3>
+              <div class="comments-list">
+                <div class="comment-item">
+                  <div class="comment-header">
+                    <span class="comment-author">fares ahmed</span>
+                    <span class="comment-time">2 hours ago</span>
+                  </div>
+                  <p class="comment-text">I've started working</p>
+                </div>
+                <div class="comment-item">
+                  <div class="comment-header">
+                    <span class="comment-author">youssef ahmed</span>
+                    <span class="comment-time">1 hour ago</span>
+                  </div>
+                  <p class="comment-text">Great</p>
+                </div>
+              </div>
+              <div class="comment-form">
+                <textarea placeholder="Add a comment..." rows="3"></textarea>
+                <button class="first-button">Post Comment</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="Project Setup" class="page">
+        <div class="Project Setup-page">
+          <div class="task-header">
+            <h1>Project Setup</h1>
+            <div class="task-actions">
+              <button class="sec-button">Edit Task</button>
+              <button class="third-button">Delete</button>
+            </div>
+          </div>
+
+          <div class="task-layout">
+            <div class="task-info">
+              <div class="info-section">
+                <h3>Task Information</h3>
+                <div class="info-grid">
+                  <div class="info-item">
+                    <label>Status:</label>
+                    <span class="status-todo">To-Do</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Priority:</label>
+                    <span class="priority-high">High</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Assigned To:</label>
+                  </div>
+                  <div class="info-item">
+                    <label>Due Date:</label>
+                    <span>December 17, 2025</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Created:</label>
+                    <span>December 4, 2025</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="description-section">
+                <h3>Description</h3>
+                <p>
+                  Design a modern and responsive homepage for the company
+                  website.
+                </p>
+              </div>
+
+              <div class="attachments-section">
+                <h3>Attachments</h3>
+                <div class="attachments-list">
+                  <div class="attachment-item">
+                    <span class="file-name">project.pdf</span>
+                    <button class="download-button">Download</button>
+                  </div>
+                  <div class="attachment-item">
+                    <span class="file-name">project.zip</span>
+                    <button class="download-button">Download</button>
+                  </div>
+                </div>
+                <button class="third-button">+ Add Attachment</button>
+              </div>
+            </div>
+
+            <div class="task-comments">
+              <h3>Comments</h3>
+              <div class="comments-list">
+                <div class="comment-item">
+                  <div class="comment-header">
+                    <span class="comment-author">omar mostafa</span>
+                    <span class="comment-time">5 hours ago</span>
+                  </div>
+                  <p class="comment-text">I've started working</p>
+                </div>
+                <div class="comment-item">
+                  <div class="comment-header">
+                    <span class="comment-author">ahmed mohamed</span>
+                    <span class="comment-time">1 hour ago</span>
+                  </div>
+                  <p class="comment-text">Great</p>
+                </div>
+              </div>
+              <div class="comment-form">
+                <textarea placeholder="Add a comment..." rows="3"></textarea>
+                <button class="first-button">Post Comment</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REPORTS PAGE -->
+      <div id="reports" class="page">
+        <div class="reports-page">
+          <h1>Team Performance Reports</h1>
+          <div class="reports-section">
+            <h2>Team Statistics</h2>
+            <div class="stats-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Team Member</th>
+                    <th>Total Tasks</th>
+                    <th>Completed</th>
+                    <th>In Progress</th>
+                    <th>Overdue</th>
+                    <th>Completion Rate</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>mohamed ayman</td>
+                    <td>15</td>
+                    <td>10</td>
+                    <td>3</td>
+                    <td>2</td>
+                    <td>67%</td>
+                  </tr>
+                  <tr>
+                    <td>ahmed mohamed</td>
+                    <td>12</td>
+                    <td>8</td>
+                    <td>4</td>
+                    <td>0</td>
+                    <td>67%</td>
+                  </tr>
+                  <tr>
+                    <td>amr ahmed</td>
+                    <td>8</td>
+                    <td>6</td>
+                    <td>2</td>
+                    <td>0</td>
+                    <td>75%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- API helper -->
+    <script src="js/api.js"></script>
+    <script>
+      function showPage(pageId) {
+        document.querySelectorAll(".page").forEach((page) => {
+          page.style.display = "none";
+        });
+
+        const active = document.getElementById(pageId);
+        if (active) active.style.display = "block";
+
+        if (pageId === "login" || pageId === "signup") {
+          document.body.classList.add("login-page");
+        } else {
+          document.body.classList.remove("login-page");
+        }
+      }
+
+      function logout() {
+        localStorage.removeItem("user");
+        showPage("login");
+      }
+
+      // LOGIN
+      async function handleLogin(event) {
+        event.preventDefault();
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+
+        let isValid = true;
+
+        if (!email) {
+          document.getElementById("emailError").textContent =
+            "Email is required";
+          isValid = false;
+        } else {
+          document.getElementById("emailError").textContent = "";
+        }
+
+        if (!password) {
+          document.getElementById("passwordError").textContent =
+            "Password is required";
+          isValid = false;
+        } else {
+          document.getElementById("passwordError").textContent = "";
+        }
+
+        if (!isValid) return;
+
+        try {
+          const user = await apiPost("/api/login", { email, password });
+
+          localStorage.setItem("user", JSON.stringify(user));
+          document.getElementById("usernameLabel").textContent = user.name;
+
+          await loadDashboardStats();
+          await loadProjects();
+
+          showPage("dashboard");
+        } catch (err) {
+          document.getElementById("passwordError").textContent =
+            "Invalid email or password";
+          console.error(err);
+        }
+      }
+
+      // SIGNUP
+      async function handleSignup(event) {
+        event.preventDefault();
+
+        const name = document.getElementById("signupName").value.trim();
+        const email = document.getElementById("signupEmail").value.trim();
+        const password = document.getElementById("signupPassword").value.trim();
+        const confirmPassword = document
+          .getElementById("signupConfirmPassword")
+          .value.trim();
+
+        let isValid = true;
+        document.getElementById("signupNameError").textContent = "";
+        document.getElementById("signupEmailError").textContent = "";
+        document.getElementById("signupPasswordError").textContent = "";
+        document.getElementById("signupConfirmPasswordError").textContent = "";
+        document.getElementById("signupGeneralError").textContent = "";
+
+        if (!name) {
+          document.getElementById("signupNameError").textContent =
+            "Name is required";
+          isValid = false;
+        }
+        if (!email) {
+          document.getElementById("signupEmailError").textContent =
+            "Email is required";
+          isValid = false;
+        }
+        if (!password) {
+          document.getElementById("signupPasswordError").textContent =
+            "Password is required";
+          isValid = false;
+        } else if (password.length < 6) {
+          document.getElementById("signupPasswordError").textContent =
+            "Password must be at least 6 characters";
+          isValid = false;
+        }
+        if (!confirmPassword) {
+          document.getElementById("signupConfirmPasswordError").textContent =
+            "Please confirm your password";
+          isValid = false;
+        } else if (password !== confirmPassword) {
+          document.getElementById("signupConfirmPasswordError").textContent =
+            "Passwords do not match";
+          isValid = false;
+        }
+
+        if (!isValid) return;
+
+        try {
+          const user = await apiPost("/api/signup", { name, email, password });
+
+          localStorage.setItem("user", JSON.stringify(user));
+          document.getElementById("usernameLabel").textContent = user.name;
+
+          await loadDashboardStats();
+          await loadProjects();
+
+          showPage("dashboard");
+        } catch (err) {
+          console.error("Signup error:", err);
+          document.getElementById("signupGeneralError").textContent =
+            "Could not sign you up. Please try again.";
+        }
+      }
+
+      // Dashboard stats
+      async function loadDashboardStats() {
+        try {
+          const stats = await apiGet("/api/dashboard");
+          document.getElementById("stat-total").textContent = stats.total ?? 0;
+          document.getElementById("stat-done").textContent = stats.done ?? 0;
+          document.getElementById("stat-in-progress").textContent =
+            stats.in_progress ?? 0;
+          document.getElementById("stat-overdue").textContent =
+            stats.overdue ?? 0;
+        } catch (err) {
+          console.error("Error loading dashboard stats:", err);
+        }
+      }
+
+      // Load projects for current user
+      async function loadProjects() {
+        const user = JSON.parse(localStorage.getItem("user") || "null");
+        if (!user) return;
+
+        try {
+          const projects = await apiGet(
+            `/api/projects?user_id=${user.user_id}`
+          );
+          console.log("Projects from API:", projects);
+
+          const tbody = document.getElementById("dashboard-projects-body");
+          if (tbody) {
+            tbody.innerHTML = "";
+            projects.forEach((p) => {
+              const tr = document.createElement("tr");
+              tr.innerHTML = `
+                <td>${p.project_id}</td>
+                <td>${p.name}</td>
+                <td>${p.status || ""}</td>
+              `;
+              tbody.appendChild(tr);
+            });
+          }
+        } catch (err) {
+          console.error("Error loading projects:", err);
+        }
+      }
+
+      // Create a new project via API
+      async function createProject() {
+        const user = JSON.parse(localStorage.getItem("user") || "null");
+        if (!user) {
+          alert("You must be logged in to create a project");
+          showPage("login");
+          return;
+        }
+
+        const name = prompt("Project name:");
+        if (!name) return;
+
+        const description = prompt("Project description (optional):") || "";
+
+        try {
+          const project = await apiPost("/api/projects", {
+            name,
+            description,
+            status: "active",
+            user_id: user.user_id,
+          });
+
+          console.log("Created project:", project);
+          alert("Project created successfully");
+
+          await loadProjects();
+        } catch (err) {
+          console.error("Error creating project:", err);
+          alert("Could not create project");
+        }
+      }
+
+      // البداية
+      showPage("login");
+    </script>
+  </body>
+</html>
